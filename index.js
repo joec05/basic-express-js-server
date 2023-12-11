@@ -2,18 +2,25 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { createServer } from 'http';
-import { Server } from "socket.io";
 import usersRoutes from './controllers/users.js';
-const app = express()
-const PORT = 4000
 
-app.get("/", (req, res) => {
-  res.send("Express on Vercel");
+const app = express();
+const PORT = 5000;
+
+app.use(cors());
+
+app.use(bodyParser.json({limit: "1gb"}));
+app.use(bodyParser.urlencoded({limit: "1gb", extended: true, parameterLimit: 500000}));
+
+var httpServer = createServer(app);
+
+app.get('/', (req, res) => {
+  res.send({
+      "success": true,
+      "message": "Welcome to backend zone!"
+  });
 });
 
-app.listen(5000, () => {
-  console.log("Running on port 5000.");
-});
+app.use('/users', usersRoutes);
 
-// Export the Express API
-module.exports = app;
+httpServer.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
