@@ -4,19 +4,16 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from "socket.io";
 import usersRoutes from './controllers/users.js';
-const express = require('express')
 const app = express()
 const PORT = 4000
 
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
+});
 
-app.get('/home', (req, res) => {
-  res.status(200).json('Welcome, your app is working well');
-})
-
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(5000, () => {
+  console.log("Running on port 5000.");
 });
 
 // Export the Express API
-module.exports = app
+module.exports = app;
