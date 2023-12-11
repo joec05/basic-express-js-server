@@ -4,43 +4,19 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from "socket.io";
 import usersRoutes from './controllers/users.js';
+const express = require('express')
+const app = express()
+const PORT = 4000
 
-const app = express();
-const PORT = 5000;
 
-app.use(cors());
+app.get('/home', (req, res) => {
+  res.status(200).json('Welcome, your app is working well');
+})
 
-app.use(bodyParser.json({limit: "1gb"}));
-app.use(bodyParser.urlencoded({limit: "1gb", extended: true, parameterLimit: 500000}));
 
-var httpServer = createServer(app);
-
-const io = new Server(httpServer, {
-  allowEIO3: true,
-  maxHttpBufferSize: 1e8, pingTimeout: 60000,
-  httpCompression: {
-    threshold: 1000,
-    chunkSize: 16 * 1000,
-    windowBits: 15,
-    memLevel: 8,
-  }
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
-io.on("connection", (socket) => {
-  console.log('Client connected.');
-
-  socket.on('disconnect', function() {
-    console.log('Client disconnected.');
-  });
-});
-
-app.get('/', (req, res) => {
-    res.send({
-        "success": true,
-        "message": "Welcome to backend zone!"
-    });
-});
-
-app.use('/users', usersRoutes);
-
-httpServer.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
+// Export the Express API
+module.exports = app
